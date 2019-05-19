@@ -1,12 +1,36 @@
 package quizVoids.actions;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.net.URLConnection;
+import java.util.ArrayList;
+
+import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
 import com.megacrit.cardcrawl.actions.AbstractGameAction;
 import com.megacrit.cardcrawl.core.Settings;
 import com.megacrit.cardcrawl.core.Settings.GameLanguage;
+import com.megacrit.cardcrawl.dungeons.AbstractDungeon;
+import com.megacrit.cardcrawl.random.Random;
 
 public class QuizAction extends AbstractGameAction {
     
     public QuizAction() {
+    }
+    
+    private static String normalized(String input){
+        String ret = input;
+        String punct = " -/\\.:'\"()";
+        for (char c:punct.toCharArray()){
+            ret = ret.replace(String.valueOf(c), "");
+        }
+        ret = ret.toLowerCase();
+        return ret;
     }
     
     private static String getLanguageAbbreviation(GameLanguage language){
@@ -72,6 +96,63 @@ public class QuizAction extends AbstractGameAction {
         System.out.println("In QuizAction.update");
         GameLanguage language = Settings.language;
         String languageAbbreviation = getLanguageAbbreviation(language);
+        URL listURL = null;
+        try {
+            listURL = new URL("https://wikimedia.org/api/rest_v1/metrics/pageviews/top/" +
+            languageAbbreviation +
+            ".wikipedia/all-access/2015/10/all-days");
+        } catch (MalformedURLException e) {
+            e.printStackTrace();
+        }
+        
+        URLConnection con;
+        InputStreamReader reader = null;
+        try {
+            con = listURL.openConnection();
+            reader = new InputStreamReader(con.getInputStream());
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+//        BufferedReader br = new BufferedReader(new InputStreamReader(con.getInputStream()));
+        JsonParser jsonParser = new JsonParser();
+        JsonElement jsonContainer = jsonParser.parse(reader);
+        JsonObject item = jsonContainer.getAsJsonObject().get("items").getAsJsonArray().get(0).getAsJsonObject();
+        ArrayList<String> titles = new ArrayList<String>();
+        for (JsonElement article:item.get("articles").getAsJsonArray()){
+            titles.add(article.getAsString());
+        }
+        String selectedTitle = titles.get(AbstractDungeon.cardRandomRng.random(0, titles.size()));
+        URL catURL = null;
+        try {
+            catURL = new URL("https://" +
+            languageAbbreviation +
+            "en.wikipedia.org/w/api.php?action=query&format=json&titles=" +
+            selectedTitle +
+            "&prop=categories");
+        } catch (MalformedURLException e) {
+            e.printStackTrace();
+        }
+        
+        try {
+            con = catURL.openConnection();
+            reader = new InputStreamReader(con.getInputStream());
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        jsonContainer = jsonParser.parse(reader);
+        String pageId = jsonContainer.getAsJsonObject().get("clcontinue").getAsString().split("\\|")[0];
+        JsonArray categoriesJsonArray = jsonContainer.getAsJsonObject().get("query").getAsJsonObject().get("pages").getAsJsonObject().get(pageId).getAsJsonObject().get("categories").getAsJsonArray();
+        ArrayList<String> categoryList = new ArrayList<String>();
+        
+        String n1 = normalized(selectedTitle);
+        for (JsonElement category:categoriesJsonArray){
+            String n2 = normalized(category.getAsString());
+            if (n1.contains(n2) || n2.contains(n1)){
+                continue;
+            }
+            categoryList.add(category.getAsString());
+        }
+        
         isDone = true;
     }
 }
