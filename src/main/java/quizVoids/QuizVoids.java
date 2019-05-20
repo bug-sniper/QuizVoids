@@ -72,56 +72,11 @@ public class QuizVoids implements
     public static boolean enablePlaceholder = true; // The boolean we'll be setting on/off (true/false)
 
     //This is for the in-game mod settings panel.
-    private static final String MODNAME = "Default Mod";
-    private static final String AUTHOR = "Gremious"; // And pretty soon - You!
-    private static final String DESCRIPTION = "A base for Slay the Spire to start your own mod from, feat. the Default.";
+    private static final String MODNAME = "Quiz Voids";
+    private static final String AUTHOR = "bug sniper"; // And pretty soon - You!
+    private static final String DESCRIPTION = "Replaces voids with quiz voids that quiz you to determine how much energy you lose.";
     
-    // =============== INPUT TEXTURE LOCATION =================
-    
-    // Colors (RGB)
-    // Character Color
-    public static final Color DEFAULT_GRAY = CardHelper.getColor(64.0f, 70.0f, 70.0f);
-    
-    // Potion Colors in RGB
-    public static final Color PLACEHOLDER_POTION_LIQUID = CardHelper.getColor(209.0f, 53.0f, 18.0f); // Orange-ish Red
-    public static final Color PLACEHOLDER_POTION_HYBRID = CardHelper.getColor(255.0f, 230.0f, 230.0f); // Near White
-    public static final Color PLACEHOLDER_POTION_SPOTS = CardHelper.getColor(100.0f, 25.0f, 10.0f); // Super Dark Red/Brown
-    
-    // ONCE YOU CHANGE YOUR MOD ID (BELOW, YOU CAN'T MISS IT) CHANGE THESE PATHS!!!!!!!!!!!
-    // ONCE YOU CHANGE YOUR MOD ID (BELOW, YOU CAN'T MISS IT) CHANGE THESE PATHS!!!!!!!!!!!
-    // ONCE YOU CHANGE YOUR MOD ID (BELOW, YOU CAN'T MISS IT) CHANGE THESE PATHS!!!!!!!!!!!
-    // ONCE YOU CHANGE YOUR MOD ID (BELOW, YOU CAN'T MISS IT) CHANGE THESE PATHS!!!!!!!!!!!
-    // ONCE YOU CHANGE YOUR MOD ID (BELOW, YOU CAN'T MISS IT) CHANGE THESE PATHS!!!!!!!!!!!
-    // ONCE YOU CHANGE YOUR MOD ID (BELOW, YOU CAN'T MISS IT) CHANGE THESE PATHS!!!!!!!!!!!
-  
-    // Card backgrounds - The actual rectangular card.
-    private static final String ATTACK_DEFAULT_GRAY = "theDefaultResources/images/512/bg_attack_default_gray.png";
-    private static final String SKILL_DEFAULT_GRAY = "theDefaultResources/images/512/bg_skill_default_gray.png";
-    private static final String POWER_DEFAULT_GRAY = "theDefaultResources/images/512/bg_power_default_gray.png";
-    
-    private static final String ENERGY_ORB_DEFAULT_GRAY = "theDefaultResources/images/512/card_default_gray_orb.png";
-    private static final String CARD_ENERGY_ORB = "theDefaultResources/images/512/card_small_orb.png";
-    
-    private static final String ATTACK_DEFAULT_GRAY_PORTRAIT = "theDefaultResources/images/1024/bg_attack_default_gray.png";
-    private static final String SKILL_DEFAULT_GRAY_PORTRAIT = "theDefaultResources/images/1024/bg_skill_default_gray.png";
-    private static final String POWER_DEFAULT_GRAY_PORTRAIT = "theDefaultResources/images/1024/bg_power_default_gray.png";
-    private static final String ENERGY_ORB_DEFAULT_GRAY_PORTRAIT = "theDefaultResources/images/1024/card_default_gray_orb.png";
-    
-    // Character assets
-    private static final String THE_DEFAULT_BUTTON = "theDefaultResources/images/charSelect/DefaultCharacterButton.png";
-    private static final String THE_DEFAULT_PORTRAIT = "theDefaultResources/images/charSelect/DefaultCharacterPortraitBG.png";
-    public static final String THE_DEFAULT_SHOULDER_1 = "theDefaultResources/images/char/defaultCharacter/shoulder.png";
-    public static final String THE_DEFAULT_SHOULDER_2 = "theDefaultResources/images/char/defaultCharacter/shoulder2.png";
-    public static final String THE_DEFAULT_CORPSE = "theDefaultResources/images/char/defaultCharacter/corpse.png";
-    
-    //Mod Badge - A small icon that appears in the mod settings menu next to your mod.
-    public static final String BADGE_IMAGE = "theDefaultResources/images/Badge.png";
-    
-    // Atlas and JSON files for the Animations
-    public static final String THE_DEFAULT_SKELETON_ATLAS = "theDefaultResources/images/char/defaultCharacter/skeleton.atlas";
-    public static final String THE_DEFAULT_SKELETON_JSON = "theDefaultResources/images/char/defaultCharacter/skeleton.json";
-    
-    // =============== MAKE IMAGE PATHS =================
+    public static boolean inQuiz = false;
     
     public static String makeCardPath(String resourcePath) {
         return getModID() + "Resources/images/cards/" + resourcePath;
@@ -147,42 +102,12 @@ public class QuizVoids implements
         return getModID() + "Resources/images/events/" + resourcePath;
     }
     
-    // =============== /MAKE IMAGE PATHS/ =================
-    
-    // =============== /INPUT TEXTURE LOCATION/ =================
-    
-    
-    // =============== SUBSCRIBE, CREATE THE COLOR_GRAY, INITIALIZE =================
-    
     public QuizVoids() {
         logger.info("Subscribe to BaseMod hooks");
         
         BaseMod.subscribe(this);
-        
-      /*
-           (   ( /(  (     ( /( (            (  `   ( /( )\ )    )\ ))\ )
-           )\  )\()) )\    )\()))\ )   (     )\))(  )\()|()/(   (()/(()/(
-         (((_)((_)((((_)( ((_)\(()/(   )\   ((_)()\((_)\ /(_))   /(_))(_))
-         )\___ _((_)\ _ )\ _((_)/(_))_((_)  (_()((_) ((_|_))_  _(_))(_))_
-        ((/ __| || (_)_\(_) \| |/ __| __| |  \/  |/ _ \|   \  |_ _||   (_)
-         | (__| __ |/ _ \ | .` | (_ | _|  | |\/| | (_) | |) |  | | | |) |
-          \___|_||_/_/ \_\|_|\_|\___|___| |_|  |_|\___/|___/  |___||___(_)
-      */
       
         setModID("QuizVoids");
-        // cool
-        // TODO: NOW READ THIS!!!!!!!!!!!!!!!:
-        
-        // 1. Go to your resources folder in the project panel, and refactor> rename theDefaultResources to
-        // yourModIDResources.
-        
-        // 2. Click on the localization > eng folder and press ctrl+shift+r, then select "Directory" (rather than in Project)
-        // replace all instances of theDefault with yourModID.
-        // Because your mod ID isn't the default. Your cards (and everything else) should have Your mod id. Not mine.
-        
-        // 3. FINALLY and most importantly: Scroll up a bit. You may have noticed the image locations above don't use getModID()
-        // Change their locations to reflect your actual ID rather than theDefault. They get loaded before getID is a thing.
-        
         logger.info("Done subscribing");
     }
     
