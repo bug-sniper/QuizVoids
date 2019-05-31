@@ -1,5 +1,6 @@
 package quizVoids.patches;
 
+import com.badlogic.gdx.Input.Keys;
 import com.evacipated.cardcrawl.modthespire.lib.SpirePatch;
 import com.evacipated.cardcrawl.modthespire.lib.SpireReturn;
 import com.megacrit.cardcrawl.helpers.TypeHelper;
@@ -34,6 +35,9 @@ public class InputPatch
     {
         public static SpireReturn Prefix(final InputAction inputAction) {
             if (QuizVoids.inQuiz) {
+                if (inputAction.getKey() == Keys.ESCAPE){
+                    QuizPanel.cancel();
+                }
                 return SpireReturn.Return((Object)false);
             }
             return SpireReturn.Continue();

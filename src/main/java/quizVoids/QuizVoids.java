@@ -6,12 +6,14 @@ import basemod.ModLabeledToggleButton;
 import basemod.ModPanel;
 import basemod.helpers.RelicType;
 import basemod.interfaces.*;
+import quizVoids.ui.QuizPanel;
 import quizVoids.util.IDCheckDontTouchPls;
 import quizVoids.util.TextureLoader;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.evacipated.cardcrawl.mod.stslib.Keyword;
 import com.evacipated.cardcrawl.modthespire.lib.SpireConfig;
 import com.evacipated.cardcrawl.modthespire.lib.SpireInitializer;
@@ -77,6 +79,7 @@ public class QuizVoids implements
     private static final String DESCRIPTION = "Replaces voids with quiz voids that quiz you to determine how much energy you lose.";
     
     public static boolean inQuiz = false;
+    public static String submission = null;
     
     public static String makeCardPath(String resourcePath) {
         return getModID() + "Resources/images/cards/" + resourcePath;
@@ -101,6 +104,8 @@ public class QuizVoids implements
     public static String makeEventPath(String resourcePath) {
         return getModID() + "Resources/images/events/" + resourcePath;
     }
+
+    private QuizPanel quizPanel;
     
     public QuizVoids() {
         logger.info("Subscribe to BaseMod hooks");
@@ -166,5 +171,18 @@ public class QuizVoids implements
     public void receivePostInitialize() {
         // TODO Auto-generated method stub
         
+    }
+    
+    public void receiveRender(final SpriteBatch spriteBatch) {
+        if (quizPanel != null) {
+            quizPanel.render(spriteBatch);
+        }
+        else {
+            quizPanel = new QuizPanel();
+        }
+    }
+    
+    public void receivePostDungeonUpdate() {
+        submission = null;
     }
 }
