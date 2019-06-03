@@ -80,6 +80,7 @@ public class QuizVoids implements
     
     public static boolean inQuiz = false;
     public static String submission = null;
+    public static QuizPanel quizPanel;
     
     public static String makeCardPath(String resourcePath) {
         return getModID() + "Resources/images/cards/" + resourcePath;
@@ -104,8 +105,6 @@ public class QuizVoids implements
     public static String makeEventPath(String resourcePath) {
         return getModID() + "Resources/images/events/" + resourcePath;
     }
-
-    private QuizPanel quizPanel;
     
     public QuizVoids() {
         logger.info("Subscribe to BaseMod hooks");

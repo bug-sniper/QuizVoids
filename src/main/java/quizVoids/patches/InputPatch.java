@@ -19,7 +19,7 @@ public class InputPatch
         public static SpireReturn<Boolean> Prefix(final TypeHelper typeHelper, final char character) {
             if (QuizVoids.inQuiz) {
                 if (character == '\n' || character == '\r') {
-                    QuizPanel.submit();
+                    QuizVoids.quizPanel.confirm();
                 }
                 else if (character >= ' ' && character <= '~') {
                     QuizPanel.textField += character;
@@ -36,7 +36,7 @@ public class InputPatch
         public static SpireReturn Prefix(final InputAction inputAction) {
             if (QuizVoids.inQuiz) {
                 if (inputAction.getKey() == Keys.ESCAPE){
-                    QuizPanel.cancel();
+                    QuizVoids.quizPanel.close();
                 }
                 return SpireReturn.Return((Object)false);
             }
