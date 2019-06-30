@@ -182,6 +182,7 @@ public class QuizVoids implements
     }
     
     public void receivePostDungeonUpdate() {
-        submission = null;
+        //TODO: Remove when no longer needed
+//        submission = null;
     }
 }
